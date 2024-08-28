@@ -54,7 +54,8 @@ public class BasketController : ApiController
     public async Task<ActionResult<ShoppingCartResponse>> DeleteBasket(string userName)
     {
         var query = new DeleteBasketByUserNameQuery(userName);
-        return Ok(await _mediator.Send(query));
+        await _mediator.Send(query);
+        return Ok();
     }
 
     [Route("[action]")]

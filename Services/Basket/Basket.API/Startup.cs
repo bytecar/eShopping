@@ -8,18 +8,12 @@ using Common.Logging.Correlation;
 using Discount.Grpc.Protos;
 using HealthChecks.UI.Client;
 using MassTransit;
-using MediatR;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ApiExplorer;
-using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.AspNetCore.Mvc.ApiExplorer;
-using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using Asp.Versioning.ApiExplorer;
+using Asp.Versioning;
 
 namespace Basket.API;
 
@@ -46,27 +40,26 @@ public class Startup
             //         new QueryStringApiVersionReader("api-version", "ver"),
             //         new MediaTypeApiVersionReader("ver")
             //     );
-        });
-        services.AddVersionedApiExplorer(options =>
+        }).AddApiExplorer(options =>
         {
             options.GroupNameFormat = "'v'VVV";
             options.SubstituteApiVersionInUrl = true;
-        services.AddApiVersioning();
-        services.AddCors(options =>
-        {
-            options.AddPolicy("CorsPolicy", policy =>
+            services.AddApiVersioning();
+            services.AddCors(options =>
             {
-                //TODO read the same from settings for prod deployment
-                policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
+                options.AddPolicy("CorsPolicy", policy =>
+                {
+                    //TODO read the same from settings for prod deployment
+                    policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
+                });
             });
-        });
-        });
+        });        
         //Redis Settings
         services.AddStackExchangeRedisCache(options =>
         {
             options.Configuration = Configuration.GetValue<string>("CacheSettings:ConnectionString");
-        });
-        services.AddMediatR(typeof(CreateShoppingCartCommandHandler).GetTypeInfo().Assembly);
+        });        
+        services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateShoppingCartCommandHandler).GetTypeInfo().Assembly));
         services.AddScoped<IBasketRepository, BasketRepository>();
         services.AddScoped<ICorrelationIdGenerator, CorrelationIdGenerator>();
         services.AddAutoMapper(typeof(Startup));
@@ -87,8 +80,7 @@ public class Startup
             {
                 cfg.Host(Configuration["EventBusSettings:HostAddress"]);
             });
-        });
-        services.AddMassTransitHostedService();
+        });        
         //Identity Server changes
         // var userPolicy = new AuthorizationPolicyBuilder()
         //     .RequireAuthenticatedUser()

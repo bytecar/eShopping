@@ -33,4 +33,9 @@ public class UpdateOrderCommandHandler : IRequestHandler<UpdateOrderCommand>
         _logger.LogInformation($"Order {orderToUpdate.Id} is successfully updated");
         return Unit.Value;
     }
+
+    Task IRequestHandler<UpdateOrderCommand>.Handle(UpdateOrderCommand request, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
 }

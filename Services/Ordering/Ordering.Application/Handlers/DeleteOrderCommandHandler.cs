@@ -29,4 +29,9 @@ public class DeleteOrderCommandHandler : IRequestHandler<DeleteOrderCommand>
         _logger.LogInformation($"Order with Id {request.Id} is deleted successfully.");
         return Unit.Value;
     }
+
+    Task IRequestHandler<DeleteOrderCommand>.Handle(DeleteOrderCommand request, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
 }

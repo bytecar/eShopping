@@ -1,3 +1,4 @@
+using System.Net.NetworkInformation;
 using System.Reflection;
 using Common.Logging;
 using Common.Logging.Correlation;
@@ -12,8 +13,9 @@ namespace Discount.API;
 public class Startup
 {
     public void ConfigureServices(IServiceCollection services)
-    {
-        services.AddMediatR(typeof(CreateDiscountCommandHandler).GetTypeInfo().Assembly);
+    {        
+        services.AddMediatR(cfg =>
+             cfg.RegisterServicesFromAssembly(typeof(CreateDiscountCommandHandler).GetTypeInfo().Assembly));
         services.AddScoped<ICorrelationIdGenerator, CorrelationIdGenerator>();
         services.AddScoped<IDiscountRepository, DiscountRepository>();
         services.AddAutoMapper(typeof(Startup));

@@ -1,17 +1,12 @@
 using System.Reflection;
 using Catalog.Application.Handlers;
+using Catalog.Core.Entities;
 using Catalog.Core.Repositories;
 using Catalog.Infrastructure.Data;
 using Catalog.Infrastructure.Repositories;
-using Common.Logging;
 using Common.Logging.Correlation;
 using HealthChecks.UI.Client;
-using MediatR;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
-using Microsoft.AspNetCore.Mvc.Authorization;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.OpenApi.Models;
 
 namespace Catalog.API;
@@ -34,15 +29,13 @@ public class Startup
         //     {
         //         policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
         //     });
-        // });
-        services.AddHealthChecks()
-            .AddMongoDb(Configuration["DatabaseSettings:ConnectionString"], "Catalog  Mongo Db Health Check",
-                HealthStatus.Degraded);
+        // });                      
+        services.Configure<Product>(Configuration.GetSection("DatabaseName"));
         services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo {Title = "Catalog.API", Version = "v1"}); });
         
         //DI
         services.AddAutoMapper(typeof(Startup));
-        services.AddMediatR(typeof(CreateProductHandler).GetTypeInfo().Assembly);
+        services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateProductHandler).GetTypeInfo().Assembly));        
         services.AddScoped<ICorrelationIdGenerator, CorrelationIdGenerator>();
         services.AddScoped<ICatalogContext, CatalogContext>();
         services.AddScoped<IProductRepository, ProductRepository>();

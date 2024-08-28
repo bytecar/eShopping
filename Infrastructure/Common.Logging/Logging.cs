@@ -1,9 +1,9 @@
+using Elastic.Serilog.Sinks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Events;
 using Serilog.Exceptions;
-using Serilog.Sinks.Elasticsearch;
 
 namespace Common.Logging;
 
@@ -33,13 +33,7 @@ public static class Logging
             if (!string.IsNullOrEmpty(elasticUrl))
             {
                 loggerConfiguration.WriteTo.Elasticsearch(
-                    new ElasticsearchSinkOptions(new Uri(elasticUrl))
-                    {
-                        AutoRegisterTemplate = true,
-                        AutoRegisterTemplateVersion = AutoRegisterTemplateVersion.ESv8,
-                        IndexFormat = "EShopping-Logs-{0:yyyy.MM.dd}",
-                        MinimumLogEventLevel = LogEventLevel.Debug
-                    });
+                    new ElasticsearchSinkOptions());
             }
         };
 }

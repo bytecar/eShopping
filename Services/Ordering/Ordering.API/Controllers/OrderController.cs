@@ -41,7 +41,7 @@ public class OrderController : ApiController
     [ProducesDefaultResponseType]
     public async Task<ActionResult> UpdateOrder([FromBody] UpdateOrderCommand command)
     {
-        var result = await _mediator.Send(command);
+        await _mediator.Send(command);
         return NoContent();
     }
     

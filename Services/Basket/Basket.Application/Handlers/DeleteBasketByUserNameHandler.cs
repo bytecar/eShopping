@@ -17,4 +17,9 @@ public class DeleteBasketByUserNameHandler: IRequestHandler<DeleteBasketByUserNa
         await _basketRepository.DeleteBasket(request.UserName);
         return Unit.Value;
     }
+
+    Task IRequestHandler<DeleteBasketByUserNameQuery>.Handle(DeleteBasketByUserNameQuery request, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
 }

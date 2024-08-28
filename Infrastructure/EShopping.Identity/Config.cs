@@ -2,9 +2,9 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
-using IdentityServer4.Models;
+using Duende.IdentityServer.Models;
 using System.Collections.Generic;
-using IdentityServer4;
+using Duende.IdentityServer;
 
 namespace EShopping.Identity
 {

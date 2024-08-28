@@ -52,8 +52,7 @@ public class Startup
                     c.ConfigureConsumer<BasketOrderingConsumerV2>(ctx);  
                 });
             });
-        });
-        services.AddMassTransitHostedService();
+        });        
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
